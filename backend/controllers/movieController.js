@@ -70,10 +70,17 @@ const getTrendingMovies = async (req, res, next) => {
  */
 const recommendMovies = async (req, res, next) => {
     try {
-        const { genre, mood, userId } = req.body; 
+        const { genre, mood, timeAvailable, minRating, yearRange, userId } = req.body; 
         
         // 1. Fetch movie pool based on user's genre preference
-        const moviePool = await fetchMoviesFromOMDb(genre || "Action");
+        let moviePool = await fetchMoviesFromOMDb(genre || "Action");
+
+        // Apply Year Filter before fetching details to save API calls and ensure we get relevant movies
+        if (yearRange === 'new') {
+            moviePool = moviePool.filter(m => parseInt(m.Year) >= 2015);
+        } else if (yearRange === 'classic') {
+            moviePool = moviePool.filter(m => parseInt(m.Year) < 2000);
+        }
 
         // 2. Fetch full details (Rating/Runtime) required for the Fuzzy Logic Engine
         const detailedMovies = await Promise.all(
@@ -82,7 +89,7 @@ const recommendMovies = async (req, res, next) => {
 
         // 3. Process each movie through the Fuzzy Logic Engine
         const recommendations = detailedMovies.map(movie => {
-            const fuzzyData = calculateAdvancedFuzzyScore(movie, { genre, mood });
+            const fuzzyData = calculateAdvancedFuzzyScore(movie, { genre, mood, timeAvailable, minRating });
             return {
                 title: movie.Title,
                 imdbID: movie.imdbID,
@@ -99,7 +106,7 @@ const recommendMovies = async (req, res, next) => {
 
         // 5. PERSISTENCE: Save the history if a userId is provided
         if (userId) {
-            await saveRecommendation(userId, { genre, mood }, recommendations);
+            await saveRecommendation(userId, { genre, mood, timeAvailable, minRating, yearRange }, recommendations);
         }
 
         res.json(recommendations);

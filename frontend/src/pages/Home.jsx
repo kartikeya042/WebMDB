@@ -9,7 +9,7 @@ const Home = () => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
     // Wait 600ms after typing stops before searching
     const debouncedSearch = useDebounce(searchTerm, 600);
 
@@ -18,7 +18,7 @@ const Home = () => {
             setLoading(true);
             setError(null);
             try {
-                const { data } = debouncedSearch 
+                const { data } = debouncedSearch
                     ? await movieService.search(debouncedSearch)
                     : await movieService.getTrending();
                 setMovies(data);
@@ -34,20 +34,20 @@ const Home = () => {
     return (
         <div className="container">
             <div style={{ textAlign: 'center', margin: '2rem 0' }}>
-                <input 
-                    type="text" 
-                    placeholder="Search movies (e.g. Inception)..." 
+                <input
+                    type="text"
+                    placeholder="Search movies (e.g. Inception)..."
                     style={{
                         width: '100%', maxWidth: '600px', padding: '15px',
                         borderRadius: '30px', border: 'none', background: '#1e293b',
                         color: 'white', outline: 'none', fontSize: '1.1rem'
                     }}
-                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
             {error && <p style={{ color: '#e50914', textAlign: 'center' }}>{error}</p>}
-            
+
             <h2 style={{ marginBottom: '1.5rem', color: '#94a3b8' }}>
                 {searchTerm ? `Showing results for "${searchTerm}"` : 'Trending Picks'}
             </h2>

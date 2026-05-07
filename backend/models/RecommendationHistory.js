@@ -8,7 +8,10 @@ const recommendationHistorySchema = mongoose.Schema({
     },
     inputParams: {
         genre: String,
-        mood: String
+        mood: String,
+        timeAvailable: Number,
+        minRating: Number,
+        yearRange: String
     },
     recommendedMovies: [{
         title: String,

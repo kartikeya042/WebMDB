@@ -1,11 +1,11 @@
 const Loader = () => {
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '50vh', 
-      flexDirection: 'column' 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '50vh',
+      flexDirection: 'column'
     }}>
       <div style={{
         width: '50px',
@@ -16,7 +16,7 @@ const Loader = () => {
         animation: 'spin 1s linear infinite'
       }}></div>
       <p style={{ marginTop: '15px', color: '#94a3b8' }}>Fetching from the database...</p>
-      
+
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
