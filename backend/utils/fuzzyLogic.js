@@ -6,10 +6,10 @@
  * 3. Mood-based priority balancing
  */
 
-const calculateFuzzyScore = (movie, prefs) => {
+const calculateAdvancedFuzzyScore = (movie, prefs) => {
   // Normalize inputs
   const rating = parseFloat(movie.imdbRating) || 0;
-  const runtime = parseInt(movie.runtime) || 0;
+  const runtime = parseInt(movie.Runtime) || 0;
   
   // Extract user preferences with defaults
   const userTimeLimit = parseInt(prefs.timeAvailable) || 120;
@@ -60,8 +60,14 @@ const calculateFuzzyScore = (movie, prefs) => {
     finalMatch = (qualityScore * 0.7) + (temporalScore * 0.3);
   }
 
-  // Return score as a decimal (0 to 1)
-  return parseFloat(finalMatch.toFixed(4));
+  let recommendationLevel = 'Low';
+  if (finalMatch >= 0.8) recommendationLevel = 'High';
+  else if (finalMatch >= 0.6) recommendationLevel = 'Medium';
+
+  return {
+    fuzzyScore: parseFloat(finalMatch.toFixed(4)),
+    recommendationLevel
+  };
 };
 
-module.exports = { calculateFuzzyScore };
+module.exports = { calculateAdvancedFuzzyScore };
